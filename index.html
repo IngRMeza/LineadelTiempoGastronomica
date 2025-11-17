@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Línea del Tiempo Gastronómica</title>
+    <!-- Incluye Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluye las fuentes Inter y Playfair Display de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Establece la fuente Inter como predeterminada para el cuerpo */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Clase personalizada para la fuente Playfair Display */
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Para el scroll suave */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* --- ESTILOS DE IMPRESIÓN --- */
+        /* Estos estilos solo se aplican al imprimir (Ctrl+P) */
+        @media print {
+
+            /* Define el tamaño de la página y los márgenes */
+            @page {
+                size: letter; /* Tamaño carta (8.5in x 11in) */
+                margin: 2cm; /* Márgenes de 2cm en todos los lados */
+            }
+
+            /* Reseteo general del cuerpo para impresión */
+            body {
+                font-family: 'Inter', sans-serif;
+                font-size: 10pt; /* Tamaño de fuente base más pequeño */
+                color: #000 !important; /* Texto siempre negro */
+                background-color: #fff !important; /* Fondo siempre blanco */
+                width: 100% !important;
+                margin: 0;
+                padding: 0;
+            }
+
+            /* Oculta el encabezado y el pie de página al imprimir */
+            header, footer {
+                display: none;
+            }
+
+            /* Ajusta el contenedor principal para que ocupe todo el ancho de la página */
+            main.container {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* --- AJUSTES DE LA LÍNEA DEL TIEMPO --- */
+
+            /* Simplifica la línea vertical de la línea del tiempo */
+            .relative.border-l-4 {
+                border-left-width: 2px !important;
+                border-color: #999 !important; /* Gris claro */
+                margin-left: 0.5rem !important;
+                padding-top: 1rem;
+            }
+
+            /* Oculta los círculos decorativos (grandes y pequeños) */
+            .z-10[class*="bg-"],
+            .absolute.-left-3.top-1\.5 {
+                display: none;
+            }
+
+            /* Ajusta los contenedores de las "Eras" */
+            .mb-16.-ml-8 {
+                margin-left: 0 !important;
+                padding-left: 0.5rem;
+                margin-bottom: 1.5rem !important;
+                /* Fuerza un salto de página antes de cada nueva era */
+                break-before: page;
+                padding-top: 1rem;
+            }
+
+            /* Ajusta los contenedores de las tarjetas */
+            .mb-12.ml-10 {
+                margin-left: 0rem !important;
+                padding-left: 1.25rem !important; /* Indenta la tarjeta de la línea */
+                margin-bottom: 1rem !important;
+            }
+
+            /* --- AJUSTES DE LAS TARJETAS DE CONTENIDO --- */
+
+            /* Estilo de la tarjeta para impresión (sin sombras, sin bordes redondos) */
+            .bg-white.p-6.rounded-xl {
+                padding: 0.5rem !important;
+                border: 1px solid #ccc; /* Borde simple */
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                transform: none !important;
+                /* Contiene la imagen flotante */
+                overflow: auto !important; 
+                /* Evita que una tarjeta se parta entre dos páginas */
+                break-inside: avoid;
+            }
+
+            /* --- AJUSTE DE IMÁGENES Y TEXTO --- */
+
+            /* Reduce el tamaño de las imágenes y las flota a la derecha */
+            img.w-full {
+                width: 200px !important; /* Ancho fijo y más pequeño */
+                max-width: 35% !important; /* Máximo 35% del contenedor */
+                height: auto !important;
+                float: right;
+                margin-left: 1rem !important;
+                margin-bottom: 0.5rem !important;
+                border-radius: 2px !important;
+            }
+
+            /* Reduce el tamaño de los títulos de "Era" */
+            h2.text-4xl {
+                font-size: 18pt !important;
+                font-weight: 700;
+            }
+
+            /* Reduce el tamaño de los títulos de las tarjetas */
+            h3.text-3xl {
+                font-size: 14pt !important;
+                font-weight: 700;
+                color: #000 !important; /* Asegura texto negro */
+            }
+
+            /* Ajusta subtítulos y párrafos */
+            p.text-lg, p.text-xl {
+                font-size: 12pt !important;
+                color: #333 !important;
+            }
+            p.text-md {
+                font-size: 9pt !important;
+                color: #444 !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            /* Ajusta el texto de las listas */
+            ul.list-disc {
+                font-size: 10pt !important;
+                padding-left: 1.5rem !important;
+                margin-top: 0.5rem;
+            }
+            li {
+                margin-bottom: 0.25rem;
+            }
+
+            /* Asegura que el texto en negrita (strong) sea negro */
+            strong.font-semibold, strong[class*="text-"] {
+                font-weight: 600 !important;
+                color: #000 !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <!-- Encabezado -->
+    <header class="bg-white shadow-sm sticky top-0 z-20">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-center text-stone-900 font-playfair">
+                Aportaciones Gastronómicas
+            </h1>
+            <p class="text-center text-stone-600 mt-2 text-lg">A lo Largo de las Eras</p>
+        </div>
+    </header>
+
+    <!-- Contenido Principal de la Línea del Tiempo -->
+    <main class="container mx-auto p-4 sm:p-6 lg:p-10">
+        <!-- Contenedor de la Línea del Tiempo -->
+        <!-- La línea ahora es más gruesa y está más espaciada -->
+        <div class="relative border-l-4 border-stone-300 ml-6 md:ml-12 mt-12">
+
+            <!-- SECCIÓN: EDAD ANTIGUA -->
+            <div class="mb-16 -ml-8 md:-ml-14">
+                <!-- Punto del "Era" en la línea -->
+                <div class="flex items-center">
+                    <div class="z-10 bg-sky-500 rounded-full h-14 w-14 flex items-center justify-center ring-8 ring-stone-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h2 class="ml-4 text-4xl font-bold text-stone-800 font-playfair">Edad Antigua</h2>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Mesopotamia -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
+                <!-- Tarjeta con sombra elevada, transición y esquinas redondeadas -->
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <!-- Imagen de marcador de posición -->
+                    <img 
+                      src="https://www.repuestosfuster.com/blog/wp-content/uploads/2024/11/herramientas_agricolas_antiguedad.jpg" 
+                      alt="Imagen de Mesopotamia"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <!-- Comentario para el usuario -->
+                    <!-- Para agregar tu propia imagen, cambia la URL en el 'src' de la etiqueta <img> de arriba -->
+                    
+                    <h3 class="text-3xl font-bold text-sky-700 font-playfair">Mesopotamia</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">Inicios 7000 a.C.</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Desarrollo de agricultura (cebada como cultivo principal) y ganadería.</li>
+                        <li>Invención de la <strong class="font-semibold text-sky-800">cerveza</strong> y el <strong class="font-semibold text-sky-800">pan</strong>, alimentos básicos.</li>
+                        <li>Creación de las primeras recetas escritas (Tablas de Yale).</li>
+                        <li>Métodos: asado, horneado, hervido (guisos) y barbacoa, usando grasas animales y aceite de sésamo.</li>
+                        <li>Consumo de gachas de cereales (tipo porridge) como plato habitual.</li>
+                        <li>Técnicas de preservación: secado, salazón y ahumado de carnes y pescados.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Egipto -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://www.shutterstock.com/shutterstock/photos/1543616240/display_1500/stock-vector-life-in-ancient-egypt-frescoes-egyptians-history-art-agriculture-workmanship-fishery-farm-1543616240.jpg" 
+                      alt="Imagen de Egipto"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-sky-700 font-playfair">Egipto</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">5000 - 1100 a.C.</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Perfeccionamiento del <strong class="font-semibold text-sky-800">pan con levadura</strong>, mejorando textura y digestión (hasta 40 tipos documentados).</li>
+                        <li>Producción sistematizada de cerveza (Heneqet), considerada "pan líquido" y consumida por todos.</li>
+                        <li>Viticultura: Producción de vino a partir de uvas, dátiles e higos.</li>
+                        <li>Desarrollo de la técnica precursora del <strong class="font-semibold text-sky-800">foie gras</strong>.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Hebreos -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://miolivagourmet.com/cdn/shop/articles/historia-origenes-aceite-de-oliva.webp?v=1716746863&width=1600" 
+                      alt="Aceite de oliva, pan y granadas"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-sky-700 font-playfair">Hebreos</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">~1200 a.C.</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Popularizan el aceite de oliva y el vino en su cultura.</li>
+                        <li>Clasificación de alimentos <strong class="font-semibold text-sky-800">"Kosher"</strong> (puros e impuros) descrita en la Torá.</li>
+                        <li>Prohibición del cerdo y mariscos; solo se permitían rumiantes con pezuña hendida y peces con aletas y escamas.</li>
+                        <li>Aprecio por la miel (posiblemente sirope de dátil) y lácteos de cabra y oveja (queso, mantequilla).</li>
+                        <li>Pan sin levadura (<strong class="font-semibold text-sky-800">matzá</strong>) como elemento central en rituales como la Pascua.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Persia -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://thumbs.dreamstime.com/z/opulento-antiguo-banquete-romano-con-gran-arquitectura-y-espléndida-fiesta-impresionante-representación-de-un-instalado-en-una-368051884.jpg?ct=jpeg" 
+                      alt="Granadas y azafrán persa"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-sky-700 font-playfair">Persia</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">546 - 331 a.C.</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Famosos por la opulencia y variedad de su <strong class="font-semibold text-sky-800">cultura del banquete</strong>.</li>
+                        <li>Distinción por el delicado equilibrio de sabores agrios, dulces y salados.</li>
+                        <li>Introducen y popularizan: <strong class="font-semibold text-sky-800">azafrán, granadas, pistachos, membrillos y agua de rosas</strong>.</li>
+                        <li>Actuaron como puente entre Oriente y Occidente, transformando el <strong class="font-semibold text-sky-800">arroz</strong> en un plato sofisticado (como el polo o pilaf).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: China -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://cdn7.kiwilimon.com/articuloimagen/31972/31911.jpg" 
+                      alt="Cocinando con un wok"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-sky-700 font-playfair">China</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">3000 a.C. - 220 a.C.</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Alimentos clave: arroz (cultivo fundamental), <strong class="font-semibold text-sky-800">salsa de soja</strong> (desarrollada hace 2000 años), tofu, miso, fideos y el origen del <strong class="font-semibold text-sky-800">té</strong>.</li>
+                        <li>Técnicas: <strong class="font-semibold text-sky-800">salteado (stir-frying)</strong> a fuego alto y cocción al vapor en vaporeras de bambú.</li>
+                        <li>Utensilios: <strong class="font-semibold text-sky-800">Wok</strong> (para saltear) y <strong class="font-semibold text-sky-800">palillos</strong> (adoptados desde tiempos de Confucio).</li>
+                        <li>Filosofía: Búsqueda de equilibrio y armonía (Yin y Yang) en la planificación de comidas, ligando comida y medicina.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Grecia -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://antiguagrecia.net/wp-content/uploads/mesas-griegas-mediterraneas-93_1.webp" 
+                      alt="Imagen de Grecia"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-sky-700 font-playfair">Grecia</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">8000 - 146 a.C.</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Sentaron las bases de la <strong class="font-semibold text-sky-800">dieta mediterránea</strong> (vegetales, legumbres, pescado).</li>
+                        <li>Establecieron normas de etiqueta y la idea del "buen comer" como un arte y signo de estatus.</li>
+                        <li>El banquete (<strong class="font-semibold text-sky-800">Symposium</strong>) se dividía en <strong class="font-semibold text-sky-800">Deipnon</strong> (comida sencilla) y <strong class="font-semibold text-sky-800">Symposium</strong> (bebida, conversación y música).</li>
+                        <li><strong class="font-semibold text-sky-800">Miteco de Siracusa (S. V a.C.):</strong> Considerado el primer autor conocido de un libro de cocina.</li>
+                        <li><strong class="font-semibold text-sky-800">Arquéstrato de Gela (S. IV a.C.):</strong> Escribió <em>Hedypatheia</em> ("El placer de comer").</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Roma -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://www.nuevatribuna.es/asset/thumbnail,992,558,center,center/media/nuevatribuna/images/2022/12/20/2022122017175888356.jpg" 
+                      alt="Imagen de Roma"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-sky-700 font-playfair">Roma</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">Siglo VI a.C. - V d.C.</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Introducción de <strong class="font-semibold text-sky-800">manteles, vajillas</strong> y uso de cubiertos en banquetes lujosos.</li>
+                        <li>Búsqueda de platillos exóticos; desarrollo de <strong class="font-semibold text-sky-800">embutidos</strong> (tocino, jamón, salchichón).</li>
+                        <li>Popularización de la salsa <strong class="font-semibold text-sky-800">Garum</strong> (fermentado de pescado, de origen griego).</li>
+                        <li>Recetario <em>De re coquinaria</em>, atribuido a <strong class="font-semibold text-sky-800">Marco Gavio Apicio</strong>.</li>
+                        <li>Creación de viveros artificiales para mantener suministro de alimentos.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: América (Prehispánica) -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://jilotepecestadodemexico.gob.mx/presidencia/wp-content/uploads/2020/08/dioxaxilonen2-1536x1023.jpg" 
+                      alt="Imagen de América Prehispánica"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-sky-700 font-playfair">América (Prehispánica)</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">desde ~3300 a.C. (Mesoamérica y Andes)</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>El <strong class="font-semibold text-sky-800">maíz</strong> como base de la dieta y <strong class="font-semibold text-sky-800">religión</strong> (tortilla, tamales, pinole).</li>
+                        <li>Proceso de <strong class="font-semibold text-sky-800">nixtamalización</strong> (Mesoamérica), que vuelve el maíz más nutritivo.</li>
+                        <li>Uso de <strong class="font-semibold text-sky-800">chiles, frijol, aguacate, tomate y tomatillo</strong>.</li>
+                        <li>Consumo de <strong class="font-semibold text-sky-800">insectos</strong> (chapulines, gusanos de maguey) y Miel Silvestre.</li>
+                        <li>Utensilios: <strong class="font-semibold text-sky-800">metate</strong> (para moler) y <strong class="font-semibold text-sky-800">comal</strong> (para cocer) y desarrollo de alfarería (jicaras, platos de barro).</li>
+                        <li>Técnica agrícola avanzada: <strong class="font-semibold text-sky-800">Chinampas</strong> (jardines flotantes en Mesoamérica).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SECCIÓN: EDAD MEDIA -->
+            <div class="mb-16 -ml-8 md:-ml-14">
+                <div class="flex items-center">
+                    <div class="z-10 bg-emerald-500 rounded-full h-14 w-14 flex items-center justify-center ring-8 ring-stone-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m5-4h1m-1 4h1m-1-4h1m-1 4h1" />
+                        </svg>
+                    </div>
+                    <h2 class="ml-4 text-4xl font-bold text-stone-800 font-playfair">Edad Media</h2>
+                    <p class="ml-4 text-xl text-stone-600 font-medium">(476 - 1492 d.C.)</p>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Francia Medieval -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-emerald-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://www.7canibales.com/wp-content/uploads/sites/2/2019/02/133_banquete.jpg" 
+                      alt="Imagen de Francia Medieval"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-emerald-700 font-playfair">Francia</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">~Siglo XIV</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Refinamiento de técnicas, enfocándose en caldos, salsas y cocciones lentas.</li>
+                        <li>Surge el servicio de <strong class="font-semibold text-emerald-800"><em>traiteurs</em></strong> (servicio de comida para llevar o catering, precursor del restaurante).</li>
+                        <li>Aparecen los primeros <strong class="font-semibold text-emerald-800">panaderos y reposteros</strong> como gremios.</li>
+                        <li>Se empieza a estructurar la comida con <strong class="font-semibold text-emerald-800">división de platos</strong>: entrantes, plato fuerte y postre.</li>
+                        <li><strong class="font-semibold text-emerald-800">Guillaume Tirel (Taillevent)</strong>: Primer chef de Francia, autor de <em>Le Viandier</em>.</li>
+                        <li>Taillevent estandariza recetas, es pionero en el <strong class="font-semibold text-emerald-800">roux</strong> para espesar salsas y usa ingredientes ácidos (verjus, vinagre) para balancear grasas.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: España Medieval -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-emerald-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://www.lanacion.com.ar/resizer/v2/las-clases-altas-comian-carnes-de-sus-RZV5F3CWP5HWJNQEUHU4RQDATU.jpg?auth=885bc3c047f88db003ad5d888055435d74ab65ec0a423cb6511155bee3787744&width=880&height=586&quality=70&smart=true" 
+                      alt="Imagen de España Medieval"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-emerald-700 font-playfair">España</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">Crisol de Culturas</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Fusión de cocinas cristiana, musulmana (Al-Andalus) y judía (Sefarad).</li>
+                        <li><strong class="font-semibold text-emerald-800">Influencia musulmana</strong>: Introduce o expande el cultivo de <strong class="font-semibold text-emerald-800">caña de azúcar</strong>, <strong class="font-semibold text-emerald-800">arroz</strong> (base de la paella), berenjena, alcachofa, espinacas, <strong class="font-semibold text-emerald-800">almendras</strong> (base del ajoblanco) y <strong class="font-semibold text-emerald-800">cítricos</strong> (naranjas y limones).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Alemania Medieval -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-emerald-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://estudiorevela.com/wp-content/uploads/2023/10/shutterstock_1094560223-500x320-1.jpg" 
+                      alt="Imagen de Alemania Medieval"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-emerald-700 font-playfair">Alemania</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">~1487 d.C.</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Adición del <strong class="font-semibold text-emerald-800">lúpulo</strong> a la cerveza, dándole sabor, aroma y, crucialmente, propiedades conservantes.</li>
+                        <li>Los monasterios se convierten en centros cerveceros clave.</li>
+                        <li>Primera "ley de pureza" de la cerveza en Baviera (1487), dictando usar solo agua, lúpulo y cebada.</li>
+                        <li>Desarrollo de la <strong class="font-semibold text-emerald-800">salchichonería</strong> (embutidos) y origen del <strong class="font-semibold text-emerald-800">sauerkraut</strong> (col fermentada).</li>
+                        <li>El <strong class="font-semibold text-emerald-800">Pretzel</strong> (Brezel) emerge como un icono de la panadería alemana.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Imperio Bizantino y Otomano -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-emerald-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://www.recetas.com/files/article/l/la-cocina-otomana-de-los-balcanes_h782a" 
+                      alt="Imagen de Imperio Bizantino y Otomano"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-emerald-700 font-playfair">Imperios Bizantino y Otomano</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">~330 - 1922 d.C.</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li><strong class="font-semibold text-emerald-800">Bizantino:</strong> Se les atribuye la invención del <strong class="font-semibold text-emerald-800">mazapán</strong> y platos precursores del baklava.</li>
+                        <li>Introducción del <strong class="font-semibold text-emerald-800">tenedor</strong>, usado por clases altas e introducido a Italia por venecianos.</li>
+                        <li><strong class="font-semibold text-emerald-800">Otomano:</strong> Legado de <strong class="font-semibold text-emerald-800">kebabs</strong> (carne a la parrilla), <strong class="font-semibold text-emerald-800">köfte</strong> (albóndigas) y <strong class="font-semibold text-emerald-800">dolmas</strong> (hojas de parra rellenas).</li>
+                        <li>Popularización global del <strong class="font-semibold text-emerald-800">café turco</strong> como fenómeno social.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Portugal y Escandinavia -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-emerald-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://www.battlemerchant.com/media/image/7f/9f/52/Met-Kulturgut-und-Genuss-im-Wandel-der-Zeit_600x600@2x.jpg" 
+                      alt="Imagen de Bacalao y Hidromiel"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-emerald-700 font-playfair">Portugal y Escandinavia</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">Edad Media</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li><strong class="font-semibold text-emerald-800">Portugal:</strong> Inicio de la tradición de las "mil y una formas" de preparar <strong class="font-semibold text-emerald-800">bacalao</strong>, que se convierte en pilar de su gastronomía.</li>
+                        <li><strong class="font-semibold text-emerald-800">Escandinavia:</strong> Consumo común de <strong class="font-semibold text-emerald-800">Cerveza (Ale)</strong> fermentada de cebada e <strong class="font-semibold text-emerald-800">Hidromiel</strong> como bebidas fundamentales.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Escocia e Inglaterra -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-emerald-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://wikiliquors.com/wp-content/uploads/2025/04/destilacion.png" 
+                      alt="Imagen de Whisky y Sunday Roast"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-emerald-700 font-playfair">Escocia e Inglaterra</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">Edad Media</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li><strong class="font-semibold text-emerald-800">Escocia:</strong> Raíces medievales de las técnicas de destilación de bebidas alcohólicas que eventualmente llevarían al <strong class="font-semibold text-emerald-800">whisky</strong>.</li>
+                        <li><strong class="font-semibold text-emerald-800">Inglaterra:</strong> Famosos por sus <strong class="font-semibold text-emerald-800">banquetes reales</strong> y el establecimiento de <strong class="font-semibold text-emerald-800">reglas de mesa</strong> (ej. no hablar con la boca llena, no sorbos ruidosos).</li>
+                        <li>Origen de la tradición del <strong class="font-semibold text-emerald-800">Sunday Roast</strong> (asado dominical).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SECCIÓN: EDAD MODERNA -->
+            <div class="mb-16 -ml-8 md:-ml-14">
+                <div class="flex items-center">
+                    <div class="z-10 bg-indigo-500 rounded-full h-14 w-14 flex items-center justify-center ring-8 ring-stone-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10m0-2s-1 7 3 10a8 8 0 015.657-5.657M12 20v-4" />
+                        </svg>
+                    </div>
+                    <h2 class="ml-4 text-4xl font-bold text-stone-800 font-playfair">Edad Moderna</h2>
+                    <p class="ml-4 text-xl text-stone-600 font-medium">(1492 - 1789)</p>
+                </div>
+            </div>
+
+            <!-- Tarjeta: El Gran Intercambio -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-indigo-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://upload.wikimedia.org/wikipedia/commons/7/77/BRI_Columbian_Exchange.jpg" 
+                      alt="Imagen de España y el Nuevo Mundo"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-indigo-700 font-playfair">España y el Nuevo Mundo</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">Desde 1492</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>España actúa como puerta de entrada a Europa para ingredientes americanos: <strong class="font-semibold text-indigo-800">tomate, pimiento, patata, cacao (chocolate), maíz, vainilla, frijoles</strong>.</li>
+                        <li>España monopoliza el comercio de cacao e introduce el <strong class="font-semibold text-indigo-800">chocolate</strong> como bebida de lujo, endulzado con azúcar de caña.</li>
+                        <li>La <strong class="font-semibold text-indigo-800">patata</strong>, aunque de lenta aceptación, se convierte en un alimento básico en Europa contra la hambruna.</li>
+                        <li>La costumbre de servir pequeñas raciones con la bebida sienta las bases de la <strong class="font-semibold text-indigo-800">cultura de las tapas</strong>.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Italia Moderna -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-indigo-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://i.etsystatic.com/27687858/r/il/1f892d/4294915304/il_1588xN.4294915304_5sen.jpg" 
+                      alt="Imagen de Italia"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-indigo-700 font-playfair">Italia</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">~1645 d.C.</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Integración del <strong class="font-semibold text-indigo-800">tomate</strong> de América, que se vuelve vital para su cocina.</li>
+                        <li>Perfeccionamiento de la <strong class="font-semibold text-indigo-800">pasta seca</strong> mediante técnicas de secado industrial en el sur (Nápoles), permitiendo su producción masiva.</li>
+                        <li>Perfeccionamiento de quesos icónicos: Parmigiano Reggiano, Gorgonzola, Mozzarella.</li>
+                        <li>Desarrollo de <strong class="font-semibold text-indigo-800">helados</strong> y apertura de la primera <strong class="font-semibold text-indigo-800">cafetería</strong> europea (fuera del Imp. Otomano) en Venecia (1645).</li>
+                        <li>Invención del <strong class="font-semibold text-indigo-800">café espresso</strong> a finales del siglo XIX.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Francia Moderna -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-indigo-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://i0.wp.com/www.archivoshistoria.com/wp-content/uploads/2022/01/1670-e1641466020516.jpg?fit=1610%2C1195&ssl=1" 
+                      alt="Imagen de Francia"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-indigo-700 font-playfair">Francia</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">Siglo XVII - 1789</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Nacimiento de la <strong class="font-semibold text-indigo-800"><em>Haute Cuisine</em></strong> (Alta Cocina); se pasa de especias fuertes a valorar el sabor natural del ingrediente.</li>
+                        <li>Creación de <strong class="font-semibold text-indigo-800">coulis, purés y mousses</strong> y estandarización de técnicas como el glaseado y baño maría.</li>
+                        <li>El Palacio de Versalles (Luis XIV) se convierte en centro de grandes banquetes.</li>
+                        <li>Nace el primer café (cafetería) en París: <strong class="font-semibold text-indigo-800">Café Le Procope (1686)</strong>.</li>
+                        <li><strong class="font-semibold text-indigo-800">Revolución Francesa (1789)</strong>: Chefs de la nobleza sin trabajo abren los primeros <strong class="font-semibold text-indigo-800">restaurantes modernos</strong>, ofreciendo menús <strong class="font-semibold text-indigo-800">à la carte</strong> y mesas individuales.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Inglaterra Moderna -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-indigo-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://britanico.edu.pe/be-britanico/wp-content/uploads/sites/5/2020/04/por-que-toman-te-reino-unido.jpg" 
+                      alt="Imagen de Inglaterra"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-indigo-700 font-playfair">Inglaterra</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">Siglo XVI - XVIII</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Introducción del <strong class="font-semibold text-indigo-800">té</strong> (finales S. XVI), que se convierte en emblema nacional.</li>
+                        <li>Se instituye la costumbre de "tomar té a media tarde".</li>
+                        <li>Popularización de los <strong class="font-semibold text-indigo-800">pies</strong> (pasteles en hojaldre) rellenos de carne, pescado o frutas.</li>
+                        <li>Surgen recetas clásicas: <strong class="font-semibold text-indigo-800">Fish and Chips</strong> (con la Rev. Industrial), Shepherd's Pie y Bangers and Mash.</li>
+                        <li>Origen del <strong class="font-semibold text-indigo-800">pub</strong> gastronómico (evolución de las tabernae romanas).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Personajes Edad Moderna -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-indigo-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgCocDyUuIjR1SGVwv39fzOOWbWvsPAoklT_TVvBJwwRevqdjBDumCdKjY3zX0MyFmPtz4UeJ2tNS1v-qTwwA0xmeLL6RaXAeqOU6_KkePRA2rcMYLad9Y7k5ZpsevFkaDQmuCJnRyPg04/s1600/catalina-de-medicis.jpg" 
+                      alt="Imagen de Personajes Clave"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-indigo-700 font-playfair">Personajes Clave</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">Edad Moderna</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li><strong class="font-semibold text-indigo-800">Catalina de Medici:</strong> Lleva de Italia a Francia la <strong class="font-semibold text-indigo-800">etiqueta en la mesa</strong>, el <strong class="font-semibold text-indigo-800">tenedor</strong>, platos individuales, servilletas, el macarrón y sorbetes. Usa los banquetes como herramienta política.</li>
+                        <li><strong class="font-semibold text-indigo-800">François Vatel:</strong> Famoso <em>maitre</em> y cocinero, inventor de la <strong class="font-semibold text-indigo-800">crema Chantilly</strong> (1671).</li>
+                        <li><strong class="font-semibold text-indigo-800">Antoine de Parmentier:</strong> Médico y nutricionista que defendió y popularizó el consumo de la <strong class="font-semibold text-indigo-800">patata</strong> en Francia, salvando al país de hambrunas. Platos como el <em>Hachis Parmentier</em> llevan su nombre.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SECCIÓN: EDAD CONTEMPORÁNEA -->
+            <div class="mb-16 -ml-8 md:-ml-14">
+                <div class="flex items-center">
+                    <div class="z-10 bg-rose-500 rounded-full h-14 w-14 flex items-center justify-center ring-8 ring-stone-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.921-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                        </svg>
+                    </div>
+                    <h2 class="ml-4 text-4xl font-bold text-stone-800 font-playfair">Edad Contemporánea</h2>
+                    <p class="ml-4 text-xl text-stone-600 font-medium">(1789 - Hoy)</p>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Padres de la Cocina Francesa -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://www.cocinayaficiones.com/wp-content/uploads/ESCOFFIER-2.jpg" 
+                      alt="Imagen de Los Pilares de Francia"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-rose-700 font-playfair">Los Pilares de Francia</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">Siglo XIX - XX</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li><strong class="font-semibold text-rose-800">Antoine Carême:</strong> Fundador de la <em>Haute Cuisine</em>, padre de la pastelería moderna (perfecciona el soufflé, inventa el croquembouche) y establece las 4 salsas madre iniciales.</li>
+                        <li><strong class="font-semibold text-rose-800">Auguste Escoffier:</strong> "Rey de los chefs". Codifica las <strong class="font-semibold text-rose-800">5 salsas madre</strong>, crea el sistema de <strong class="font-semibold text-rose-800">brigada de cocina</strong> (jerarquía profesional) y la importancia del <em>Mise en Place</em>. Escribe <em>Le Guide Culinaire</em>.</li>
+                        <li><strong class="font-semibold text-rose-800">Brillat-Savarin:</strong> Escribe <em>Fisiología del Gusto</em> (1825), una obra filosófica que define al "gastrónomo" y eleva la comida a ciencia y arte.</li>
+                        <li><strong class="font-semibold text-rose-800">Grimod de La Reynière:</strong> Considerado el <strong class="font-semibold text-rose-800">primer crítico gastronómico</strong>. Funda la crítica de restaurantes con su <em>L'Almanach des gourmands</em> (1803) y crea el término "Gourmet".</li>
+                        <li><strong class="font-semibold text-rose-800">Prosper Montagné:</strong> Sistematiza el conocimiento culinario en la "biblia" de la cocina: <strong class="font-semibold text-rose-800"><em>Larousse Gastronomique</em></strong>.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Nouvelle Cuisine -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://files.vilbo.com/img/2024/old/big_3f29fabf-4f83-4f7a-b4d9-67cfc0bc997c.webp" 
+                      alt="Imagen de Paul Bocuse y la Nouvelle Cuisine"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-rose-700 font-playfair">Paul Bocuse y la Nouvelle Cuisine</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">~1970s</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Lidera (apodado el "Papa de la cocina") el movimiento <strong class="font-semibold text-rose-800"><em>Nouvelle Cuisine</em></strong>.</li>
+                        <li>Filosofía: Simplicidad y ligereza (menos salsas pesadas), respeto al producto fresco de temporada, cocciones precisas (verduras al dente) y presentación estética.</li>
+                        <li>Plato icónico: <em>Soupe aux truffes noires V.G.E.</em></li>
+                        <li>Su restaurante mantuvo 3 estrellas Michelin por 55 años ininterrumpidos.</li>
+                        <li>Crea el <strong class="font-semibold text-rose-800">Bocuse d'Or (1987)</strong>, el concurso gastronómico más prestigioso ("Olimpiadas de la cocina").</li>
+                        <li>Pionero en el "Chef como Marca" global.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Cocina Molecular -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://www.cadena3.com/admin/playerswf/fotos/ARCHI_988040.jpg" 
+                      alt="Imagen de Ferran Adrià y la Cocina Molecular"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-rose-700 font-playfair">Ferran Adrià y la Cocina Molecular</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">~1990s - 2011</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Revoluciona la gastronomía desde su restaurante <strong class="font-semibold text-rose-800">elBulli</strong> (nombrado "Mejor restaurante del mundo" 5 veces).</li>
+                        <li>Apodado el "Dalí de la cocina", prefería el término "cocina tecnoemocional".</li>
+                        <li>Técnicas: <strong class="font-semibold text-rose-800">Deconstrucción</strong> (alterar texturas y formas), <strong class="font-semibold text-rose-800">esferificación</strong> (crear "caviar" líquido), <strong class="font-semibold text-rose-800">espumas</strong> (con sifones) y uso de nitrógeno líquido.</li>
+                        <li>Modelo único: operaba solo 6 meses al año para dedicar 6 meses a la investigación creativa en su taller.</li>
+                        <li>Cierra elBulli en 2011 para convertirlo en una fundación (elBulli1846).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Vanguardia Española -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://www.madridfusion.net/media/c2d5f72b-733f-4c16-9b79-d7312bd7425e_3%20germans%202018%20600.jpg" 
+                      alt="Imagen de Hermanos Roca"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-rose-700 font-playfair">Hermanos Roca (El Celler de Can Roca)</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">~2000s - Hoy</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Combinan tradición catalana con vanguardia técnica en Girona, España.</li>
+                        <li>Filosofía de "Cocina de la Memoria", creando platos que apelan a las emociones y la historia personal.</li>
+                        <li>Trio de expertos: <strong class="font-semibold text-rose-800">Joan</strong> (cocina salada, pionero en <strong class="font-semibold text-rose-800">cocción a baja temperatura</strong>), <strong class="font-semibold text-rose-800">Josep</strong> (sumillería y narrativa de vinos), <strong class="font-semibold text-rose-800">Jordi</strong> (pastelería creativa, reinterpreta postres e incluso perfumes).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Nueva Cocina Nórdica -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://files.vilbo.com/img/authors/big_e24cdb1c-9459-45ea-936a-da44eadf570e.webp" 
+                      alt="Imagen de René Redzepi y la Nueva Cocina Nórdica"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-rose-700 font-playfair">René Redzepi y la Nueva Cocina Nórdica</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">~2000s - Hoy</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li>Restaurante <strong class="font-semibold text-rose-800">Noma</strong> (Copenhague), padre de la <strong class="font-semibold text-rose-800">Nueva Cocina Nórdica</strong>.</li>
+                        <li>Rechaza ingredientes importados (sin aceite de oliva o tomates); se centra exclusivamente en el producto local nórdico (musgos, líquenes, bayas silvestres).</li>
+                        <li>Populariza el <strong class="font-semibold text-rose-800"><em>foraging</em></strong> (recolección silvestre) y la <strong class="font-semibold text-rose-800">fermentación</strong> como técnicas centrales.</li>
+                        <li>Filosofía de "Cocina de Origen": mirar hacia adentro, al propio entorno y cultura, para definir la identidad local.</li>
+                        <li>Noma opera con tres menús estacionales completamente diferentes al año (Mar, Vegetal, Caza).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Movimientos Globales -->
+            <div class="mb-12 ml-10 md:ml-20">
+                <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src="https://ffe.mx/wp-content/uploads/2024/08/hermanos-rivera-rio-portada.jpeg" 
+                      alt="Imagen de Movimientos Globales y TV"
+                      class="w-full rounded-lg mb-6 bg-stone-200"
+                      loading="lazy"
+                      onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
+                    >
+                    <h3 class="text-3xl font-bold text-rose-700 font-playfair">Movimientos Globales y TV</h3>
+                    <p class="text-md font-medium text-stone-500 mb-4">Siglo XX - Hoy</p>
+                    <ul class="list-disc pl-6 space-y-2 text-stone-700">
+                        <li><strong class="font-semibold text-rose-800">"Farm to Table" (De la Granja a la Mesa):</strong> Liderado por <strong class="font-semibold text-rose-800">Alice Waters</strong> (Chez Panisse, 1970s). Enfoque en producto local, de temporada, sostenible y apoyo a agricultores de la zona.</li>
+                        <li><strong class="font-semibold text-rose-800">Cocina de Origen (Latinoamérica):</strong> Chefs que revalorizan sus raíces y biodiversidad, como <strong class="font-semibold text-rose-800">Virgilio Martínez</strong> (Perú), <strong class="font-semibold text-rose-800">Rodolfo Guzmán</strong> (Chile) y los <strong class="font-semibold text-rose-800">Hermanos Rivera Río</strong> (México).</li>
+                        <li><strong class="font-semibold text-rose-800">Gastronomía en TV:</strong>
+                            <ul class="list-disc pl-6 mt-2 space-y-1">
+                                <li><strong class="font-semibold">Julia Child:</strong> Desmitifica la alta cocina francesa para las masas en EE.UU.</li>
+                                <li><strong class="font-semibold">Anthony Bourdain:</strong> Transforma la comida en documentales de viaje y antropología cultural (<em>No Reservations</em>).</li>
+                                <li><strong class="font-semibold">Gordon Ramsay:</strong> Introduce el formato <em>reality show</em> culinario enfocado en la competencia y el drama (<em>Hell's Kitchen</em>).</li>
+                                <li><strong class="font-semibold">Jamie Oliver:</strong> Aporta un enfoque fresco en comida casera saludable y campañas de cambio social.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div> <!-- Fin del contenedor de la línea del tiempo -->
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="bg-stone-900 text-stone-400 mt-20">
+        <div class="container mx-auto px-6 py-10 text-center">
+            <p>&copy; 2024 Línea del Tiempo Gastronómica.</p>
+            <p class="text-sm mt-1">A partir de "APORTACIONES GASTRONOMICO A LO LARGO DE LAS ERAS.pdf".</p>
+        </div>
+    </footer>
+
+</body>
+</html>
