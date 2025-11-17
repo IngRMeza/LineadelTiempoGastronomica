@@ -45,10 +45,45 @@
                 padding: 0;
             }
 
-            /* Oculta el encabezado y el pie de página al imprimir 
-            header, footer {
-                display: none;
-            }*/
+            /* Oculta el encabezado y el pie de página al imprimir */
+            /* MODIFICADO: Se quita 'display: none' y se añaden estilos de impresión */
+            header {
+                position: static !important; /* Anula 'sticky' */
+                box-shadow: none !important;
+                background-color: #fff !important;
+                padding-bottom: 1rem !important;
+                border-bottom: 1px solid #ccc; /* Separador simple */
+                text-align: center;
+                break-after: avoid; /* Intenta no romper después del encabezado */
+            }
+            
+            header h1 {
+                font-size: 20pt !important;
+                color: #000 !important;
+            }
+            
+            header p {
+                font-size: 12pt !important;
+                color: #333 !important;
+            }
+
+            footer {
+                position: static !important;
+                background-color: #fff !important;
+                color: #555 !important;
+                text-align: center;
+                padding-top: 1rem !important;
+                margin-top: 2rem !important;
+                border-top: 1px solid #ccc;
+                font-size: 9pt !important;
+                /* Intenta que el pie de página no se parta */
+                break-inside: avoid;
+            }
+
+            footer p {
+                color: #555 !important;
+                font-size: 9pt !important;
+            }
 
             /* Ajusta el contenedor principal para que ocupe todo el ancho de la página */
             main.container {
