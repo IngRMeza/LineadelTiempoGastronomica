@@ -119,6 +119,11 @@
                 padding-top: 1rem;
             }
 
+            /* NUEVA REGLA: Evita el salto de página ANTES de la *primera* sección "Era" */
+            .relative.border-l-4 > .mb-16.-ml-8:first-child {
+                break-before: auto;
+            }
+
             /* Ajusta los contenedores de las tarjetas */
             .mb-12.ml-10 {
                 margin-left: 0rem !important;
