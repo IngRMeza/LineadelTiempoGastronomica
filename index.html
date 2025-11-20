@@ -27,176 +27,49 @@
         /* --- ESTILOS DE IMPRESIÓN --- */
         /* Estos estilos solo se aplican al imprimir (Ctrl+P) */
         @media print {
+            /* Habilita la impresión de fondos y colores exactos */
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
 
             /* Define el tamaño de la página y los márgenes */
             @page {
-                size: letter; /* Tamaño carta (8.5in x 11in) */
-                margin: 2cm; /* Márgenes de 2cm en todos los lados */
+                size: letter; /* Tamaño carta */
+                margin: 1.5cm; 
             }
 
-            /* Reseteo general del cuerpo para impresión */
-            body {
-                font-family: 'Inter', sans-serif;
-                font-size: 10pt; /* Tamaño de fuente base más pequeño */
-                color: #000 !important; /* Texto siempre negro */
-                background-color: #fff !important; /* Fondo siempre blanco */
-                width: 100% !important;
-                margin: 0;
-                padding: 0;
-            }
-
-            /* Oculta el encabezado y el pie de página al imprimir */
-            /* MODIFICADO: Se quita 'display: none' y se añaden estilos de impresión */
-            header {
-                position: static !important; /* Anula 'sticky' */
-                box-shadow: none !important;
-                background-color: #fff !important;
-                padding-bottom: 1rem !important;
-                border-bottom: 1px solid #ccc; /* Separador simple */
-                text-align: center;
-                break-after: avoid; /* Intenta no romper después del encabezado */
-            }
-            
-            header h1 {
-                font-size: 20pt !important;
-                color: #000 !important;
-            }
-            
-            header p {
-                font-size: 12pt !important;
-                color: #333 !important;
-            }
-
-            footer {
-                position: static !important;
-                background-color: #fff !important;
-                color: #555 !important;
-                text-align: center;
-                padding-top: 1rem !important;
-                margin-top: 2rem !important;
-                border-top: 1px solid #ccc;
-                font-size: 9pt !important;
-                /* Intenta que el pie de página no se parta */
+            /* Evita que los elementos se partan a la mitad entre páginas */
+            .break-inside-avoid {
                 break-inside: avoid;
             }
-
-            footer p {
-                color: #555 !important;
-                font-size: 9pt !important;
+            
+            /* Ajuste específico solicitado: Redimensionar imágenes */
+            img {
+                max-width: 150px !important; /* Imagen más pequeña */
+                height: auto !important;
+                float: right !important; /* Flotar a la derecha para ahorrar espacio vertical */
+                margin-left: 1rem !important;
+                margin-bottom: 0.5rem !important;
             }
 
-            /* Ajusta el contenedor principal para que ocupe todo el ancho de la página */
+            /* Ajustes de contenedores para que fluyan bien en papel */
             main.container {
                 width: 100% !important;
                 max-width: 100% !important;
-                margin: 0 !important;
                 padding: 0 !important;
+                margin: 0 !important;
             }
 
-            /* --- AJUSTES DE LA LÍNEA DEL TIEMPO --- */
-
-            /* Simplifica la línea vertical de la línea del tiempo */
-            .relative.border-l-4 {
-                border-left-width: 2px !important;
-                border-color: #999 !important; /* Gris claro */
-                margin-left: 0.5rem !important;
-                padding-top: 1rem;
+            /* Evita saltos de página extraños en títulos */
+            h1, h2, h3 {
+                break-after: avoid;
             }
 
-            /* Oculta los círculos decorativos (grandes y pequeños) */
-            .z-10[class*="bg-"],
-            .absolute.-left-3.top-1\.5 {
-                display: none;
-            }
-
-            /* Ajusta los contenedores de las "Eras" */
-            .mb-16.-ml-8 {
-                margin-left: 0 !important;
-                padding-left: 0.5rem;
-                margin-bottom: 1.5rem !important;
-                /* Fuerza un salto de página antes de cada nueva era */
-                break-before: page;
-                padding-top: 1rem;
-            }
-
-            /* NUEVA REGLA: Evita el salto de página ANTES de la *primera* sección "Era" */
-            .relative.border-l-4 > .mb-16.-ml-8:first-child {
-                break-before: auto;
-            }
-
-            /* Ajusta los contenedores de las tarjetas */
-            .mb-12.ml-10 {
-                margin-left: 0rem !important;
-                padding-left: 1.25rem !important; /* Indenta la tarjeta de la línea */
-                margin-bottom: 1rem !important;
-            }
-
-            /* --- AJUSTES DE LAS TARJETAS DE CONTENIDO --- */
-
-            /* Estilo de la tarjeta para impresión (sin sombras, sin bordes redondos) */
-            .bg-white.p-6.rounded-xl {
-                padding: 0.5rem !important;
-                border: 1px solid #ccc; /* Borde simple */
-                box-shadow: none !important;
-                border-radius: 0 !important;
-                transform: none !important;
-                /* Contiene la imagen flotante */
-                overflow: auto !important; 
-                /* Evita que una tarjeta se parta entre dos páginas */
-                break-inside: avoid;
-            }
-
-            /* --- AJUSTE DE IMÁGENES Y TEXTO --- */
-
-            /* Reduce el tamaño de las imágenes y las flota a la derecha */
-            img.w-full {
-                width: 200px !important; /* Ancho fijo y más pequeño */
-                max-width: 35% !important; /* Máximo 35% del contenedor */
-                height: auto !important;
-                float: right;
-                margin-left: 1rem !important;
-                margin-bottom: 0.5rem !important;
-                border-radius: 2px !important;
-            }
-
-            /* Reduce el tamaño de los títulos de "Era" */
-            h2.text-4xl {
-                font-size: 18pt !important;
-                font-weight: 700;
-            }
-
-            /* Reduce el tamaño de los títulos de las tarjetas */
-            h3.text-3xl {
-                font-size: 14pt !important;
-                font-weight: 700;
-                color: #000 !important; /* Asegura texto negro */
-            }
-
-            /* Ajusta subtítulos y párrafos */
-            p.text-lg, p.text-xl {
-                font-size: 12pt !important;
-                color: #333 !important;
-            }
-            p.text-md {
-                font-size: 9pt !important;
-                color: #444 !important;
-                margin-bottom: 0.5rem !important;
-            }
-
-            /* Ajusta el texto de las listas */
-            ul.list-disc {
-                font-size: 10pt !important;
-                padding-left: 1.5rem !important;
-                margin-top: 0.5rem;
-            }
-            li {
-                margin-bottom: 0.25rem;
-            }
-
-            /* Asegura que el texto en negrita (strong) sea negro */
-            strong.font-semibold, strong[class*="text-"] {
-                font-weight: 600 !important;
-                color: #000 !important;
+            /* Ocultar elementos de navegación si los hubiera, 
+               pero mantener el header visible como en la web */
+            header {
+                position: static !important;
             }
         }
     </style>
@@ -220,7 +93,7 @@
         <div class="relative border-l-4 border-stone-300 ml-6 md:ml-12 mt-12">
 
             <!-- SECCIÓN: EDAD ANTIGUA -->
-            <div class="mb-16 -ml-8 md:-ml-14">
+            <div class="mb-16 -ml-8 md:-ml-14 break-inside-avoid">
                 <!-- Punto del "Era" en la línea -->
                 <div class="flex items-center">
                     <div class="z-10 bg-sky-500 rounded-full h-14 w-14 flex items-center justify-center ring-8 ring-stone-50">
@@ -233,7 +106,7 @@
             </div>
 
             <!-- Tarjeta: Mesopotamia -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
                 <!-- Tarjeta con sombra elevada, transición y esquinas redondeadas -->
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
@@ -245,8 +118,6 @@
                       loading="lazy"
                       onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
                     >
-                    <!-- Comentario para el usuario -->
-                    <!-- Para agregar tu propia imagen, cambia la URL en el 'src' de la etiqueta <img> de arriba -->
                     
                     <h3 class="text-3xl font-bold text-sky-700 font-playfair">Mesopotamia</h3>
                     <p class="text-md font-medium text-stone-500 mb-4">Inicios 7000 a.C.</p>
@@ -262,7 +133,7 @@
             </div>
 
             <!-- Tarjeta: Egipto -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -284,7 +155,7 @@
             </div>
 
             <!-- Tarjeta: Hebreos -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -307,7 +178,7 @@
             </div>
 
             <!-- Tarjeta: Persia -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -329,7 +200,7 @@
             </div>
 
             <!-- Tarjeta: China -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -351,7 +222,7 @@
             </div>
 
             <!-- Tarjeta: Grecia -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -374,7 +245,7 @@
             </div>
 
             <!-- Tarjeta: Roma -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -397,7 +268,7 @@
             </div>
 
             <!-- Tarjeta: América (Prehispánica) -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-sky-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -421,7 +292,7 @@
             </div>
 
             <!-- SECCIÓN: EDAD MEDIA -->
-            <div class="mb-16 -ml-8 md:-ml-14">
+            <div class="mb-16 -ml-8 md:-ml-14 break-inside-avoid">
                 <div class="flex items-center">
                     <div class="z-10 bg-emerald-500 rounded-full h-14 w-14 flex items-center justify-center ring-8 ring-stone-50">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -434,7 +305,7 @@
             </div>
 
             <!-- Tarjeta: Francia Medieval -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-emerald-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -458,7 +329,7 @@
             </div>
 
             <!-- Tarjeta: España Medieval -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-emerald-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -478,12 +349,12 @@
             </div>
             
             <!-- +++ PERSONAJE AGREGADO 1: Guillaume Tirel +++ -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-emerald-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img src="https://static.rollingpin.de/wp-content/uploads/2021/10/rp257-leg-Guillaume-Tirel.jpg" alt="Guillaume Tirel" class="w-full rounded-lg mb-6 bg-stone-200" loading="lazy" onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Guillaume+Tirel';">
                     <h3 class="text-3xl font-bold text-emerald-700 font-playfair">Guillaume Tirel (Taillevent)</h3>
-                    <p class="text-md font-medium text-stone-500 mb-4">Edad Media (Francia)</p>
+                    <p class="text-md font-medium text-stone-500 mb-4">~1310 – 1395 (Francia)</p>
                     <p class="text-stone-700 mb-2">Considerado el <strong>primer chef de Francia</strong>, sirvió a la realeza durante aproximadamente 70 años.</p>
                     <h4 class="font-bold text-emerald-800 mt-2">Aportaciones:</h4>
                     <ul class="list-disc pl-6 space-y-1 text-stone-700">
@@ -497,7 +368,7 @@
             </div>
 
             <!-- Tarjeta: Alemania Medieval -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-emerald-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -520,7 +391,7 @@
             </div>
 
             <!-- Tarjeta: Imperio Bizantino y Otomano -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-emerald-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -542,7 +413,7 @@
             </div>
 
             <!-- Tarjeta: Portugal y Escandinavia -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-emerald-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -562,7 +433,7 @@
             </div>
 
             <!-- Tarjeta: Escocia e Inglaterra -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-emerald-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -583,7 +454,7 @@
             </div>
 
             <!-- SECCIÓN: EDAD MODERNA -->
-            <div class="mb-16 -ml-8 md:-ml-14">
+            <div class="mb-16 -ml-8 md:-ml-14 break-inside-avoid">
                 <div class="flex items-center">
                     <div class="z-10 bg-indigo-500 rounded-full h-14 w-14 flex items-center justify-center ring-8 ring-stone-50">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -596,7 +467,7 @@
             </div>
 
             <!-- Tarjeta: El Gran Intercambio -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-indigo-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -618,7 +489,7 @@
             </div>
 
             <!-- Tarjeta: Italia Moderna -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-indigo-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -641,7 +512,7 @@
             </div>
 
             <!-- Tarjeta: Francia Moderna -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-indigo-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -664,7 +535,7 @@
             </div>
 
             <!-- Tarjeta: Inglaterra Moderna -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-indigo-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -687,7 +558,7 @@
             </div>
 
             <!-- Tarjeta: Personajes Edad Moderna -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-indigo-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -700,15 +571,15 @@
                     <h3 class="text-3xl font-bold text-indigo-700 font-playfair">Personajes Clave</h3>
                     <p class="text-md font-medium text-stone-500 mb-4">Edad Moderna</p>
                     <ul class="list-disc pl-6 space-y-2 text-stone-700">
-                        <li><strong class="font-semibold text-indigo-800">Catalina de Medici:</strong> Lleva de Italia a Francia la <strong class="font-semibold text-indigo-800">etiqueta en la mesa</strong>, el <strong class="font-semibold text-indigo-800">tenedor</strong>, platos individuales, servilletas, el macarrón y sorbetes. Usa los banquetes como herramienta política.</li>
-                        <li><strong class="font-semibold text-indigo-800">François Vatel:</strong> Famoso <em>maitre</em> y cocinero, inventor de la <strong class="font-semibold text-indigo-800">crema Chantilly</strong> (1671).</li>
-                        <li><strong class="font-semibold text-indigo-800">Antoine de Parmentier:</strong> Médico y nutricionista que defendió y popularizó el consumo de la <strong class="font-semibold text-indigo-800">patata</strong> en Francia, salvando al país de hambrunas. Platos como el <em>Hachis Parmentier</em> llevan su nombre.</li>
+                        <li><strong class="font-semibold text-indigo-800">Catalina de Medici (1519 - 1589):</strong> Lleva de Italia a Francia la <strong class="font-semibold text-indigo-800">etiqueta en la mesa</strong>, el <strong class="font-semibold text-indigo-800">tenedor</strong>, platos individuales, servilletas, el macarrón y sorbetes. Usa los banquetes como herramienta política.</li>
+                        <li><strong class="font-semibold text-indigo-800">François Vatel (1631 - 1671):</strong> Famoso <em>maitre</em> y cocinero, inventor de la <strong class="font-semibold text-indigo-800">crema Chantilly</strong> (1671).</li>
+                        <li><strong class="font-semibold text-indigo-800">Antoine de Parmentier (1737 - 1813):</strong> Médico y nutricionista que defendió y popularizó el consumo de la <strong class="font-semibold text-indigo-800">patata</strong> en Francia, salvando al país de hambrunas. Platos como el <em>Hachis Parmentier</em> llevan su nombre.</li>
                     </ul>
                 </div>
             </div>
 
             <!-- SECCIÓN: EDAD CONTEMPORÁNEA -->
-            <div class="mb-16 -ml-8 md:-ml-14">
+            <div class="mb-16 -ml-8 md:-ml-14 break-inside-avoid">
                 <div class="flex items-center">
                     <div class="z-10 bg-rose-500 rounded-full h-14 w-14 flex items-center justify-center ring-8 ring-stone-50">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -721,16 +592,16 @@
             </div>
 
              <!-- +++ PERSONAJE AGREGADO 2: Auguste Escoffier +++ -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img src="https://www.biografiasyvidas.com/biografia/e/fotos/escoffier.jpg" alt="Auguste Escoffier" class="w-full rounded-lg mb-6 bg-stone-200" loading="lazy" onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Auguste+Escoffier';">
                     <h3 class="text-3xl font-bold text-rose-700 font-playfair">1. Auguste Escoffier</h3>
-                    <p class="text-md font-medium text-stone-500 mb-4">"El rey de los chefs y chef de reyes"</p>
-                    <p class="text-stone-700 mb-2">Transformó la cocina en un sistema profesional y ordenado.</p>
+                    <p class="text-md font-medium text-stone-500 mb-4">1846 - 1935</p>
+                    <p class="text-stone-700 mb-2">"El rey de los chefs y chef de reyes". Transformó la cocina en un sistema profesional y ordenado.</p>
                     <h4 class="font-bold text-rose-800 mt-2">Aportaciones:</h4>
                     <ul class="list-disc pl-6 space-y-1 text-stone-700">
-                        <li>Escribió <strong>"Le Guide Culinaire"</strong>, la biblia de la cocina clásica.</li>
+                        <li>Escribió <strong>"Le Guide Culinaire"</strong> (1903), la biblia de la cocina clásica.</li>
                         <li>Codificó las <strong>5 salsas madre</strong>.</li>
                         <li>Creó el <strong>sistema de brigada de cocina</strong> (jerarquía militar).</li>
                         <li>Estableció normas estrictas de higiene y uniformes.</li>
@@ -741,13 +612,13 @@
             </div>
 
             <!-- +++ PERSONAJE AGREGADO 3: Antoine Carême +++ -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img src="https://gastronomadas.com.mx/wp-content/uploads/2024/11/Careme-portada-770x540.png" alt="Antoine Carême" class="w-full rounded-lg mb-6 bg-stone-200" loading="lazy" onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Antoine+Careme';">
                     <h3 class="text-3xl font-bold text-rose-700 font-playfair">2. Antoine Carême</h3>
-                    <p class="text-md font-medium text-stone-500 mb-4">Fundador de la Haute Cuisine</p>
-                    <p class="text-stone-700 mb-2">Primer "chef estrella" internacional, cocinó para Napoleón y el Zar Alejandro I.</p>
+                    <p class="text-md font-medium text-stone-500 mb-4">1784 - 1833</p>
+                    <p class="text-stone-700 mb-2">Fundador de la Haute Cuisine. Primer "chef estrella" internacional, cocinó para Napoleón y el Zar Alejandro I.</p>
                     <h4 class="font-bold text-rose-800 mt-2">Aportaciones:</h4>
                     <ul class="list-disc pl-6 space-y-1 text-stone-700">
                         <li>Primer estudioso de las salsas (estableció las 4 primeras salsas madre).</li>
@@ -759,13 +630,13 @@
             </div>
 
             <!-- +++ PERSONAJE AGREGADO 4: Brillat-Savarin +++ -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img src="https://www.cocinayaficiones.com/wp-content/uploads/2015/07/SAVARIN.jpg" alt="Brillat Savarin" class="w-full rounded-lg mb-6 bg-stone-200" loading="lazy" onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Brillat+Savarin';">
                     <h3 class="text-3xl font-bold text-rose-700 font-playfair">3. Brillat Savarin</h3>
-                    <p class="text-md font-medium text-stone-500 mb-4">Filósofo de la Gastronomía</p>
-                    <p class="text-stone-700 mb-2">Autor de la obra maestra <em>"Fisiología del Gusto"</em> (1825).</p>
+                    <p class="text-md font-medium text-stone-500 mb-4">1755 - 1826</p>
+                    <p class="text-stone-700 mb-2">Filósofo de la Gastronomía. Autor de la obra maestra <em>"Fisiología del Gusto"</em> (1825).</p>
                     <h4 class="font-bold text-rose-800 mt-2">Aportaciones:</h4>
                     <ul class="list-disc pl-6 space-y-1 text-stone-700">
                         <li>Elevó la comida a la categoría de ciencia y arte.</li>
@@ -777,13 +648,13 @@
             </div>
 
             <!-- +++ PERSONAJE AGREGADO 5: Grimod de La Reynière +++ -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img src="https://fahrenheitmagazine.b-cdn.net/sites/default/files/styles/xl/public/field/image/grimod_portada.jpg" alt="Grimod de La Reynière" class="w-full rounded-lg mb-6 bg-stone-200" loading="lazy" onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Grimod';">
                     <h3 class="text-3xl font-bold text-rose-700 font-playfair">4. Grimod de La Reynière</h3>
-                    <p class="text-md font-medium text-stone-500 mb-4">Primer Crítico Gastronómico</p>
-                    <p class="text-stone-700 mb-2">Periodista culinario que fundó la crítica de restaurantes.</p>
+                    <p class="text-md font-medium text-stone-500 mb-4">1758 - 1837</p>
+                    <p class="text-stone-700 mb-2">Primer Crítico Gastronómico. Periodista culinario que fundó la crítica de restaurantes.</p>
                     <h4 class="font-bold text-rose-800 mt-2">Aportaciones:</h4>
                     <ul class="list-disc pl-6 space-y-1 text-stone-700">
                         <li>Publicó <strong>"L'Almanach des gourmands"</strong> (1803), la primera guía de restaurantes.</li>
@@ -795,13 +666,13 @@
             </div>
 
             <!-- +++ PERSONAJE AGREGADO 6: Prosper Montagné +++ -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img src="https://www.gastronomiac.com/wp/wp-content/uploads/2018/08/Prosper-Montagne.jpg" alt="Prosper Montagné" class="w-full rounded-lg mb-6 bg-stone-200" loading="lazy" onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Prosper+Montagne';">
                     <h3 class="text-3xl font-bold text-rose-700 font-playfair">5. Prosper Montagné</h3>
-                    <p class="text-md font-medium text-stone-500 mb-4">El Enciclopedista Culinario</p>
-                    <p class="text-stone-700 mb-2">Chef y escritor que sistematizó el conocimiento culinario francés.</p>
+                    <p class="text-md font-medium text-stone-500 mb-4">1865 - 1948</p>
+                    <p class="text-stone-700 mb-2">El Enciclopedista Culinario. Chef y escritor que sistematizó el conocimiento culinario francés.</p>
                     <h4 class="font-bold text-rose-800 mt-2">Aportaciones:</h4>
                     <ul class="list-disc pl-6 space-y-1 text-stone-700">
                         <li>Autor de <strong>"Larousse Gastronomique"</strong>, la enciclopedia de referencia mundial.</li>
@@ -812,13 +683,13 @@
             </div>
 
             <!-- +++ PERSONAJE AGREGADO 7: Paul Bocuse +++ -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img src="https://files.vilbo.com/img/2024/old/big_3f29fabf-4f83-4f7a-b4d9-67cfc0bc997c.webp" alt="Paul Bocuse" class="w-full rounded-lg mb-6 bg-stone-200" loading="lazy" onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Paul+Bocuse';">
                     <h3 class="text-3xl font-bold text-rose-700 font-playfair">6. Paul Bocuse</h3>
-                    <p class="text-md font-medium text-stone-500 mb-4">Padre de la Nouvelle Cuisine</p>
-                    <p class="text-stone-700 mb-2">Apodado el "Papa de la cocina", revolucionó la gastronomía en los años 70.</p>
+                    <p class="text-md font-medium text-stone-500 mb-4">1926 - 2018</p>
+                    <p class="text-stone-700 mb-2">Padre de la Nouvelle Cuisine. Apodado el "Papa de la cocina", revolucionó la gastronomía en los años 70.</p>
                     <h4 class="font-bold text-rose-800 mt-2">Aportaciones:</h4>
                     <ul class="list-disc pl-6 space-y-1 text-stone-700">
                         <li>Líder de la <strong>Nouvelle Cuisine</strong>: ligereza, salsas menos pesadas, respeto al producto fresco y cocciones cortas.</li>
@@ -830,12 +701,12 @@
             </div>
 
             <!-- +++ PERSONAJE AGREGADO 8: Ferran Adrià +++ -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img src="https://www.cadena3.com/admin/playerswf/fotos/ARCHI_988040.jpg" alt="Ferran Adrià" class="w-full rounded-lg mb-6 bg-stone-200" loading="lazy" onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Ferran+Adria';">
                     <h3 class="text-3xl font-bold text-rose-700 font-playfair">Ferran Adrià</h3>
-                    <p class="text-md font-medium text-stone-500 mb-4">La Revolución Molecular (~1990s - 2011)</p>
+                    <p class="text-md font-medium text-stone-500 mb-4">Nacido en 1962 (La Revolución Molecular: ~1990s - 2011)</p>
                     <p class="text-stone-700 mb-2">El "Dalí de la cocina", líder del restaurante <strong>elBulli</strong> (5 veces el mejor del mundo).</p>
                     <h4 class="font-bold text-rose-800 mt-2">Aportaciones:</h4>
                     <ul class="list-disc pl-6 space-y-1 text-stone-700">
@@ -848,7 +719,7 @@
             </div>
 
             <!-- Tarjeta: Vanguardia Española -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -859,7 +730,7 @@
                       onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
                     >
                     <h3 class="text-3xl font-bold text-rose-700 font-playfair">Hermanos Roca (El Celler de Can Roca)</h3>
-                    <p class="text-md font-medium text-stone-500 mb-4">~2000s - Hoy</p>
+                    <p class="text-md font-medium text-stone-500 mb-4">Joan (1964), Josep (1966), Jordi (1978)</p>
                     <ul class="list-disc pl-6 space-y-2 text-stone-700">
                         <li>Combinan tradición catalana con vanguardia técnica en Girona, España.</li>
                         <li>Filosofía de "Cocina de la Memoria", creando platos que apelan a las emociones y la historia personal.</li>
@@ -869,7 +740,7 @@
             </div>
 
             <!-- Tarjeta: Nueva Cocina Nórdica -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -880,7 +751,7 @@
                       onerror="this.src='https://placehold.co/600x400/F0F0F0/999999?text=Error+Cargando';"
                     >
                     <h3 class="text-3xl font-bold text-rose-700 font-playfair">René Redzepi y la Nueva Cocina Nórdica</h3>
-                    <p class="text-md font-medium text-stone-500 mb-4">~2000s - Hoy</p>
+                    <p class="text-md font-medium text-stone-500 mb-4">Nacido en 1977 (~2000s - Hoy)</p>
                     <ul class="list-disc pl-6 space-y-2 text-stone-700">
                         <li>Restaurante <strong class="font-semibold text-rose-800">Noma</strong> (Copenhague), padre de la <strong class="font-semibold text-rose-800">Nueva Cocina Nórdica</strong>.</li>
                         <li>Rechaza ingredientes importados (sin aceite de oliva o tomates); se centra exclusivamente en el producto local nórdico (musgos, líquenes, bayas silvestres).</li>
@@ -892,7 +763,7 @@
             </div>
 
             <!-- Tarjeta: Movimientos Globales -->
-            <div class="mb-12 ml-10 md:ml-20">
+            <div class="mb-12 ml-10 md:ml-20 break-inside-avoid">
                 <div class="absolute -left-3 top-1.5 w-6 h-6 bg-white rounded-full border-4 border-rose-500"></div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden">
                     <img 
@@ -905,14 +776,14 @@
                     <h3 class="text-3xl font-bold text-rose-700 font-playfair">Movimientos Globales y TV</h3>
                     <p class="text-md font-medium text-stone-500 mb-4">Siglo XX - Hoy</p>
                     <ul class="list-disc pl-6 space-y-2 text-stone-700">
-                        <li><strong class="font-semibold text-rose-800">"Farm to Table" (De la Granja a la Mesa):</strong> Liderado por <strong class="font-semibold text-rose-800">Alice Waters</strong> (Chez Panisse, 1970s). Enfoque en producto local, de temporada, sostenible y apoyo a agricultores de la zona.</li>
-                        <li><strong class="font-semibold text-rose-800">Cocina de Origen (Latinoamérica):</strong> Chefs que revalorizan sus raíces y biodiversidad, como <strong class="font-semibold text-rose-800">Virgilio Martínez</strong> (Perú), <strong class="font-semibold text-rose-800">Rodolfo Guzmán</strong> (Chile) y los <strong class="font-semibold text-rose-800">Hermanos Rivera Río</strong> (México).</li>
+                        <li><strong class="font-semibold text-rose-800">"Farm to Table" (De la Granja a la Mesa):</strong> Liderado por <strong class="font-semibold text-rose-800">Alice Waters (n. 1944)</strong> (Chez Panisse, 1970s). Enfoque en producto local, de temporada, sostenible y apoyo a agricultores de la zona.</li>
+                        <li><strong class="font-semibold text-rose-800">Cocina de Origen (Latinoamérica):</strong> Chefs que revalorizan sus raíces y biodiversidad, como <strong class="font-semibold text-rose-800">Virgilio Martínez (n. 1977)</strong> (Perú), <strong class="font-semibold text-rose-800">Rodolfo Guzmán (n. 1978)</strong> (Chile) y los <strong class="font-semibold text-rose-800">Hermanos Rivera Río</strong> (México).</li>
                         <li><strong class="font-semibold text-rose-800">Gastronomía en TV:</strong>
                             <ul class="list-disc pl-6 mt-2 space-y-1">
-                                <li><strong class="font-semibold">Julia Child:</strong> Desmitifica la alta cocina francesa para las masas en EE.UU.</li>
-                                <li><strong class="font-semibold">Anthony Bourdain:</strong> Transforma la comida en documentales de viaje y antropología cultural (<em>No Reservations</em>).</li>
-                                <li><strong class="font-semibold">Gordon Ramsay:</strong> Introduce el formato <em>reality show</em> culinario enfocado en la competencia y el drama (<em>Hell's Kitchen</em>).</li>
-                                <li><strong class="font-semibold">Jamie Oliver:</strong> Aporta un enfoque fresco en comida casera saludable y campañas de cambio social.</li>
+                                <li><strong class="font-semibold">Julia Child (1912-2004):</strong> Desmitifica la alta cocina francesa para las masas en EE.UU.</li>
+                                <li><strong class="font-semibold">Anthony Bourdain (1956-2018):</strong> Transforma la comida en documentales de viaje y antropología cultural (<em>No Reservations</em>).</li>
+                                <li><strong class="font-semibold">Gordon Ramsay (n. 1966):</strong> Introduce el formato <em>reality show</em> culinario enfocado en la competencia y el drama (<em>Hell's Kitchen</em>).</li>
+                                <li><strong class="font-semibold">Jamie Oliver (n. 1975):</strong> Aporta un enfoque fresco en comida casera saludable y campañas de cambio social.</li>
                             </ul>
                         </li>
                     </ul>
@@ -926,7 +797,7 @@
     <footer class="bg-stone-900 text-stone-400 mt-20">
         <div class="container mx-auto px-6 py-10 text-center">
             <p>&copy; 2025 Línea del Tiempo Gastronómica.</p>
-            <p class="text-sm mt-1">A partir de "APORTACIONES GASTRONOMICO A LO LARGO DE LAS ERAS.pdf".</p>
+            <p class="text-sm mt-1">A partir de "APORTACIONES GASTRONOMICAS A LO LARGO DE LAS ERAS.pdf".</p>
         </div>
     </footer>
 
